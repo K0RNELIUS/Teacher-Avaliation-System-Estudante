@@ -44,6 +44,7 @@ nav {
     border-radius: 12px;
     padding: 10px 20px; /*cria caixinha envolta do componente de entrar*/
     cursor: pointer;
+    outline: none;
 }
 
 .button-text {
@@ -98,4 +99,38 @@ h2, h4, h6, p, a {
 
 .ajuste {
     margin-top: 30px;
+}
+
+.input-label {
+    color: var(--fontColorDark);
+    font-size: medium;
+}
+
+.input-box {
+    border-radius: 15px;
+    width: 60%;
+    height: 40px;
+    border-style: solid;
+    border-color: var(--corescura);
+    background: var(--corextraclara);
+    outline: none;
+    padding-left: 20px;
+    font-size: small;
+    text-align: left;
+}
+
+/*especifica mudança ao clicar nos inputs*/
+.input-box:focus {
+    background: var(--corclara);
+    border-color: var(--corextraescura);
+}
+
+::placeholder {
+    color: var(--fontColorDark);
+}
+
+.err {
+    font-size: small;
+    font-weight: bold;
+    color: var(--corerro);
 }

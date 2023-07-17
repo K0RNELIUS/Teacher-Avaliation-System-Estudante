@@ -230,6 +230,54 @@ app.get('/', function(req, res){
   res.render('index.ejs');
 })
 
+app.post('/criarEstudanteData', function (req, res) {
+  let matricula = req.body.matricula;
+  let email = req.body.email;
+  let senha = req.body.senha;
+  let nome = req.body.nome;
+  let curso = req.body.curso;
+  let foto = req.body.foto;
+
+  console.log(matricula, email, senha, nome, curso, foto);
+
+  let check_estudante = 'SELECT * FROM estudante WHERE Matricula = ?';
+
+  con.query(check_estudante, matricula, function (err, result) {
+    if (err) throw err;
+    if (result.length === 0) { // caso n exista no bd validations to insert
+      if (!email.endsWith('@aluno.unb.br')) { // verificacao do email 
+        res.render('criarestudante.ejs', { // email errado, mando aviso ao front
+          resultEmailValidation: { emailCorrect: false },
+        });
+      } else { // caso contrario, posso inserir no bd 
+        let create_estudante =
+          'INSERT INTO estudante (Matricula, Email, Senha, Nome, Curso, Foto) VALUES (?, ?, ?, ?, ?, ?)';
+        let values = [
+          matricula,
+          email,
+          senha,
+          nome, 
+          curso,
+          foto
+        ];
+
+        con.query(create_estudante, values, function (err, result) {
+          if (err) throw err;
+          console.log('Estudante criado');
+          res.render('loginestudante.ejs');
+        });
+      }
+    } else {
+      console.log('Estudante ja existe, direcionando para login...')
+      res.render('loginestudante.ejs');
+    }
+  });
+});
+
+app.get('/criarEstudante', function(req, res) {
+  res.render('criarestudante.ejs', { resultEmailValidation: { emailCorrect: true } });
+})
+
 /*
 app.post('/', function(req,res) {
   let id = req.body.id;
