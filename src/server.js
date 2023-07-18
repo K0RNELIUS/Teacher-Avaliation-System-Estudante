@@ -6,8 +6,8 @@ const mysql = require('mysql2');
 const connectionConfig = {
   host: 'localhost',
   user: 'root', // usuario onde se deseja criar BD no MySQL
-  password: 'mysqlpassword', // senha do usuario
-  database: 'databasename' // nome do banco de dados a ser criado ou estabelecida a conexao
+  password: 'Leo250262', // senha do usuario
+  database: 'leandrodb' // nome do banco de dados a ser criado ou estabelecida a conexao
 };
 
 
@@ -25,7 +25,7 @@ con.connect(function(err) {
     const tempCon = mysql.createConnection(tempConnectionConfig);
 
     // Usando conexao temporaria para criar novo BD com infos
-    tempCon.query('CREATE DATABASE IF NOT EXISTS databasename', function(err, result) { // nome do banco de dados deve ser inserido aqui tambem
+    tempCon.query('CREATE DATABASE IF NOT EXISTS leandrodb', function(err, result) { // nome do banco de dados deve ser inserido aqui tambem
       if (err) {
         console.error('Failed to create the database:', err);
         return;
@@ -38,7 +38,7 @@ con.connect(function(err) {
         if (err) console.error('Failed to close the temporary connection:', err);
 
         // Conecta conexao original com BD criado
-        con.changeUser({ database: 'databasename' }, function(err) { // nome do banco de dados deve ser inserido aqui tambem
+        con.changeUser({ database: 'leandrodb' }, function(err) { // nome do banco de dados deve ser inserido aqui tambem
           if (err) console.error('Failed to switch to the newly created database:', err);
           else console.log('Connected to the newly created database!');
         });

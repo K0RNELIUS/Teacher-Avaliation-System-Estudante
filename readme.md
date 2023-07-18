@@ -14,6 +14,7 @@ This command will make the needed instalations.
 ![Alt text](</images readme/instalacao bd.png>)
 ![Alt text](</images readme/install2.png>)
 ![Alt text](</images readme/install3.png>)
+![Alt text](</images readme/install4.png>)
 
 Perfect! Now you will need to make a small change to the server.js file which is inside the src directory in the project.<br>
 To not share MySQL password, I have left the fields required blank. So unless the following steps are met, the system will not work.<br>
