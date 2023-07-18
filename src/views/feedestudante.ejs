@@ -21,21 +21,29 @@
     <div class="content center">
         <div class="center">
             <h2 class="space">Suas Informações:</h2>
-            <img class="space viewimage" src="data:image/jpeg;base64,<%- resultLogin.estudanteInfo.Foto.toString('base64') %>" alt="fotoestudante">
-            <h6 class="space">Matricula: <%- resultLogin.estudanteInfo.Matricula %></h6>
-            <h6 class="space">Email: <%- resultLogin.estudanteInfo.Email %></h6>
-            <h6 class="space">Nome: <%- resultLogin.estudanteInfo.Nome %></h6>
-            <h6 class="space">Curso: <%- resultLogin.estudanteInfo.Curso %></h6>
-            <ul class="space estudante-buttons">
-                <a href="/updateEstudante?matricula=<%- resultLogin.estudanteInfo.Matricula %>"><li class="button-box">Editar</li></a>
-                <a href=""><li class="button-box">Deletar</li></a>
-                <a href=""><li class="button-box">Avaliar</li></a>
-            </ul>
-            <hr>
+            <% if (resultLogin && resultLogin.estudanteInfo) { %>
+                <% if (resultLogin.estudanteInfo.Foto) { %>
+                    <img class="space viewimage" src="data:image/jpeg;base64,<%- resultLogin.estudanteInfo.Foto.toString('base64') %>" alt="fotoestudante">
+                <% } %>
+                <h6 class="space">Matricula: <%- resultLogin.estudanteInfo.Matricula %></h6>
+                <h6 class="space">Email: <%- resultLogin.estudanteInfo.Email %></h6>
+                <h6 class="space">Nome: <%- resultLogin.estudanteInfo.Nome %></h6>
+                <h6 class="space">Curso: <%- resultLogin.estudanteInfo.Curso %></h6>
+                <ul class="space estudante-buttons">
+                    <a href="/updateEstudante?matricula=<%- resultLogin.estudanteInfo.Matricula %>"><li class="button-box">Editar</li></a>
+                    <a href=""><li class="button-box">Deletar</li></a>
+                    <a href=""><li class="button-box">Avaliar</li></a>
+                </ul>
+                <hr>
+            <% } else { %>
+                <p>No student information available.</p>
+            <% } %>
         </div>
     </div>
 </main>
 <script src=""></script>
 </body>
 </html>
+
+
 

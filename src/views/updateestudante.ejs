@@ -20,7 +20,7 @@
 <main>            
     <div class="content center">
         <h2 class="space">Preencha as informações abaixo para atualizar sua conta:</h2>
-        <form action="/updateEstudanteData" method="post" enctype="multipart/form-data">
+        <form action="/updateEstudanteData?matricula=<%- estudanteInfo.Matricula %>" method="post" enctype="multipart/form-data">
 
             <div class="space">
                 <label class="center input-label" for="Matricula">Matricula:</label><br>
@@ -41,14 +41,14 @@
                 <label class="center input-label" for="Nome">Nome:</label><br>
                 <input class="input-box" type="text" placeholder="Nome..." name="nome" value="<%- estudanteInfo.Nome %>">
             </div>
-
+            
             <div class="space">
                 <label class="center input-label" for="Curso">Curso:</label><br>
                 <input class="input-box" type="text" placeholder="Curso..." name="curso" value="<%- estudanteInfo.Curso %>">
             </div>
-
+            
             <div class="space">
-                <input class="center button-box" type="submit" placeholder="Criar!">
+                <input class="center button-box" type="submit" value="Atualizar">
             </div>
 
         </form>

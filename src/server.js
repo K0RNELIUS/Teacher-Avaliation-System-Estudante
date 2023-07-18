@@ -342,9 +342,14 @@ app.get('/updateEstudante', function(req, res) {
 });
 
 app.post('/updateEstudanteData', function(req, res) {
-  let matricula = req.body.matricula;
+  let matricula = req.query.matricula; 
   let nome = req.body.nome;
   let curso = req.body.curso;
+
+  console.log('Received form data:');
+  console.log('Matricula:', matricula);
+  console.log('Nome:', nome);
+  console.log('Curso:', curso);
 
   let updateEstudante = 'UPDATE estudante SET Nome = ?, Curso = ? WHERE Matricula = ?';
 
@@ -355,10 +360,19 @@ app.post('/updateEstudanteData', function(req, res) {
 
     con.query(check_estudante, [matricula], function (err, result) {
       if (err) throw err;
-      res.render('feedestudante.ejs', {
-        resultLogin: { estudanteInfo: result[0] }
-      });
+
+      if (result.length === 0) {
+        res.render('criarestudante.ejs', {
+          resultEmailValidation: { emailCorrect: true }
+        });
+      } else {
+        res.render('feedestudante.ejs', {
+          resultLogin: { estudanteInfo: result[0] }
+        });
+      }
     });
   });
 });
+
+
 
