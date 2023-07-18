@@ -6,8 +6,8 @@ const mysql = require('mysql2');
 const connectionConfig = {
   host: 'localhost',
   user: 'root', // usuario onde se deseja criar BD no MySQL
-  password: 'Leo250262', // senha do usuario
-  database: 'leandrodb' // nome do banco de dados a ser criado ou estabelecida a conexao
+  password: 'mysqlpassword', // senha do usuario
+  database: 'databasename' // nome do banco de dados a ser criado ou estabelecida a conexao
 };
 
 
@@ -25,7 +25,7 @@ con.connect(function(err) {
     const tempCon = mysql.createConnection(tempConnectionConfig);
 
     // Usando conexao temporaria para criar novo BD com infos
-    tempCon.query('CREATE DATABASE IF NOT EXISTS leandrodb', function(err, result) { // nome do banco de dados deve ser inserido aqui tambem
+    tempCon.query('CREATE DATABASE IF NOT EXISTS databasename', function(err, result) { // nome do banco de dados deve ser inserido aqui tambem
       if (err) {
         console.error('Failed to create the database:', err);
         return;
@@ -38,7 +38,7 @@ con.connect(function(err) {
         if (err) console.error('Failed to close the temporary connection:', err);
 
         // Conecta conexao original com BD criado
-        con.changeUser({ database: 'leandrodb' }, function(err) { // nome do banco de dados deve ser inserido aqui tambem
+        con.changeUser({ database: 'databasename' }, function(err) { // nome do banco de dados deve ser inserido aqui tambem
           if (err) console.error('Failed to switch to the newly created database:', err);
           else console.log('Connected to the newly created database!');
         });
@@ -165,7 +165,7 @@ const populaBD = [
     (NOW(), 7);`,
 ];
 
-/*
+
 // Executa comandos estabelecidos no populaBD
 
 for (let i = 0; i < populaBD.length; i++) {
@@ -174,7 +174,7 @@ for (let i = 0; i < populaBD.length; i++) {
     else {console.log(`Populando entidade ${i + 1} foi executada com sucesso!`);}
   });
 }
-*/
+
 
 // Criacao das Views e Procedures
 
@@ -203,7 +203,7 @@ const auxiliosBD = [
     END`,
 ];
 
-/*
+
 // Executa SQL da criacao das procedures e views
 
 for (let i = 0; i < auxiliosBD.length; i++) {
@@ -212,7 +212,7 @@ for (let i = 0; i < auxiliosBD.length; i++) {
     else {console.log(`Colocando view ou procedure ${i + 1} que foi executada com sucesso!`);}
   });
 }
-*/
+
 
 const app = express();
 const multer = require('multer')
@@ -318,3 +318,43 @@ app.get('/loginEstudante', function(req, res) {
     resultSenhaValidation: { senhaCorrect: true }
   });
 });
+
+app.get('/updateEstudante', function(req, res) {
+  let matricula = req.query.matricula;
+
+  let check_estudante = 'SELECT * FROM estudante WHERE Matricula = ?';
+
+  con.query(check_estudante, [matricula], function(err, result) {
+    if (err) throw err;
+
+    if (result.length === 0) {
+      res.render('criarestudante.ejs', {
+        resultEmailValidation: { emailCorrect: true }
+      });
+    } else {
+      res.render('updateestudante.ejs', { estudanteInfo: result[0] });
+    }
+  });
+});
+
+app.post('/updateEstudanteData', function(req, res) {
+  let matricula = req.body.matricula;
+  let nome = req.body.nome;
+  let curso = req.body.curso;
+
+  let updateEstudante = 'UPDATE estudante SET Nome = ?, Curso = ? WHERE Matricula = ?';
+
+  con.query(updateEstudante, [nome, curso, matricula], function(err, result) {
+    if (err) throw err;
+
+    let check_estudante = 'SELECT * FROM estudante WHERE Matricula = ?';
+
+    con.query(check_estudante, matricula, function (err, result) {
+      if (err) throw err;
+      res.render('feedestudante.ejs', {
+        resultLogin: { estudanteInfo: result[0] }
+      });
+    });
+  });
+});
+
