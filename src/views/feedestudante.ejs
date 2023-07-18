@@ -20,7 +20,8 @@
 <main>
     <div class="content center">
         <div class="center">
-            <h2 class="space">Suas Informações:</h2>
+            <div class="space">
+                <h2 class="space">Suas Informações:</h2>
             <% if (resultLogin && resultLogin.estudanteInfo) { %>
                 <% if (resultLogin.estudanteInfo.Foto) { %>
                     <img class="space viewimage" src="data:image/jpeg;base64,<%- resultLogin.estudanteInfo.Foto.toString('base64') %>" alt="fotoestudante">
@@ -38,6 +39,18 @@
             <% } else { %>
                 <p>No student information available.</p>
             <% } %>
+            </div>
+
+            <div class="avals">
+                <% for (let i = 0; i<resultLogin.avalsInfo.length; i++){ %>
+                    <ul class="space estudante-buttons">
+                        <li> <%- resultLogin.avalsInfo[i].Data %></li>
+                        <li> <%- resultLogin.avalsInfo[i].Nome %></li>
+                        <li> <%- resultLogin.avalsInfo[i].Nome_Disciplina %></li>
+                    </ul>
+                    <p class="space"><%- resultLogin.avalsInfo[i].Conteudo %></p>
+                <% } %> 
+            </div>
         </div>
     </div>
 </main>

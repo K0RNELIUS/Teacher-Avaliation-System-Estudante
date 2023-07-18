@@ -1,7 +1,17 @@
-// const path = require('path');
 const express = require('express');
 const mysql = require('mysql2');
-  
+const bodyParser = require('body-parser');
+const multer = require('multer');
+
+const app = express();
+app.set('view engine', 'ejs');
+app.use(express.static("public"));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
 // Estabelece configuracao da conexao com BD
 const connectionConfig = {
   host: 'localhost',
@@ -213,18 +223,6 @@ for (let i = 0; i < auxiliosBD.length; i++) {
   });
 }
 
-
-const app = express();
-const multer = require('multer')
-const bodyParser = require('body-parser');
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended:true}));
-app.set('view engine', 'ejs');
-app.use(express.static("public"));
-
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
-
 // Inicia servidor e indica porta
 app.listen(3000, function() {
     console.log(`Server listening on port ${3000}`);
@@ -298,24 +296,36 @@ app.post('/loginEstudanteData', function (req, res) {
 
   con.query(check_estudante, [matricula], function (err, result) {
     if (err) throw err;
-    if (result.length === 0) { // caso n exista estudante com matricula no bd preciso direcionar a criacao do usuario
+    if (result.length === 0) {
       console.log('Estudante n existe, direcionando para sign-up...');
       res.render('criarestudante.ejs', {
         resultEmailValidation: { emailCorrect: true }
       });
-    } else { // estudante com matricula existe em result
+    } else {
       if (result[0].Senha !== senha) {
         res.render('loginestudante.ejs', {
           resultSenhaValidation: { senhaCorrect: false }
-        });        
-      } else { // existe e senha esta correta
-        res.render('feedestudante.ejs', {
-          resultLogin: { estudanteInfo: result[0] }
+        });
+      } else {
+        let feedcontent = {};
+        feedcontent.estudanteInfo = result[0];
+
+        let get_view_avals = 'SELECT * FROM avaliacao_view;';
+
+        con.query(get_view_avals, function (err, result) {
+          if (err) throw err;
+          console.log(result);
+          feedcontent.avalsInfo = result;
+
+          res.render('feedestudante.ejs', {
+            resultLogin: feedcontent
+          });
         });
       }
     }
   });
 });
+
 
 app.get('/loginEstudante', function(req, res) {
   res.render('loginestudante.ejs', {
@@ -342,7 +352,7 @@ app.get('/updateEstudante', function(req, res) {
 });
 
 app.post('/updateEstudanteData', function(req, res) {
-  let matricula = req.query.matricula; 
+  let matricula = req.query.matricula;
   let nome = req.body.nome;
   let curso = req.body.curso;
 
@@ -366,13 +376,25 @@ app.post('/updateEstudanteData', function(req, res) {
           resultEmailValidation: { emailCorrect: true }
         });
       } else {
-        res.render('feedestudante.ejs', {
-          resultLogin: { estudanteInfo: result[0] }
+        let feedcontent = {};
+        feedcontent.estudanteInfo = result[0];
+
+        let get_view_avals = 'SELECT * FROM avaliacao_view;';
+
+        con.query(get_view_avals, function (err, result) {
+          if (err) throw err;
+          console.log(result);
+          feedcontent.avalsInfo = result;
+
+          res.render('feedestudante.ejs', {
+            resultLogin: feedcontent
+          });
         });
       }
     });
   });
 });
+
 
 
 
