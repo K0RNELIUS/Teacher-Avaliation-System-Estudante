@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Leandro BD</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<nav>
+    <a href="" class="button-box">Admin</a>
+    <ul class="nav-content">
+        <a href="/criarEstudante"><li class="button-text">Sign-Up</li></a>
+        <a href="/loginEstudante"><li class="button-box">Login</li></a>
+    </ul>
+</nav>
+
+<main>
+    <div class="content center">
+        <div class="center">
+            <img class="space viewimage" src="data:image/jpeg;base64,<%- resultLogin.estudanteInfo.Foto.toString('base64') %>" alt="fotoestudante">
+            <h6 class="space">Matricula: <%- resultLogin.estudanteInfo.Matricula %></h6>
+            <h6 class="space">Email: <%- resultLogin.estudanteInfo.Email %></h6>
+            <h6 class="space">Nome: <%- resultLogin.estudanteInfo.Nome %></h6>
+            <h6 class="space">Curso: <%- resultLogin.estudanteInfo.Curso %></h6>
+            <ul class="space estudante-buttons">
+                <a href=""><li class="button-box">Editar</li></a>
+                <a href=""><li class="button-box">Deletar</li></a>
+                <a href=""><li class="button-box">Avaliar</li></a>
+            </ul>
+            <hr>
+        </div>
+    </div>
+</main>
+<script src=""></script>
+</body>
+</html>
+

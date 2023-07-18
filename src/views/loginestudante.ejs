@@ -12,15 +12,15 @@
         <nav>
             <a href="" class="button-box">Admin</a>
             <ul class="nav-content">
-                <a href=""><li class="button-text">Sign-Up</li></a>
-                <a href=""><li class="button-box">Login</li></a>
+                <a href="/criarEstudante"><li class="button-text">Sign-Up</li></a>
+                <a href="/loginEstudante"><li class="button-box">Login</li></a>
             </ul>
         </nav>
 
         <main>            
             <div class="content center">
-                <h2 class="space">Pagina de Login do Estudante</h2>
-                <form action="/criarEstudanteData" method="post">
+                <h2 class="space">Preencha as informações abaixo para realizar o login:</h2>
+                <form action="/loginEstudanteData" method="post">
 
                     <div class="space">
                         <label class="center input-label" for="Matricula">Matricula:</label><br>
@@ -28,8 +28,16 @@
                     </div>
 
                     <div class="space">
-                        <label class="center input-label" for="Email">Email:</label><br>
-                        <input class="input-box" type="email" placeholder="Email..." name="email">    
+                        <label class="center input-label" for="Senha">Senha:</label><br>
+                        <input class="input-box" type="password" placeholder="Senha..." name="senha">
+                    </div>
+
+                    <% if (!resultSenhaValidation.senhaCorrect) { %>
+                        <p class="center err">Senha Incorreta</p>
+                    <% } %>    
+
+                    <div class="space">
+                        <input class="center button-box" type="submit" placeholder="Criar!">
                     </div>
 
                     

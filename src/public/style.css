@@ -134,3 +134,18 @@ h2, h4, h6, p, a {
     font-weight: bold;
     color: var(--corerro);
 }
+
+.viewimage {
+    border-radius: 50px;
+    width: 50%;
+    height: 50%;
+}
+
+.estudante-buttons {
+    list-style-type: none;  /*tira bullets da lista*/
+}
+
+.estudante-buttons li {
+    display: inline-block; /*faz os list items ficarem horizontais*/
+    padding: 5px 15px;
+}

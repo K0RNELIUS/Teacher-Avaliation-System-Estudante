@@ -215,11 +215,15 @@ for (let i = 0; i < auxiliosBD.length; i++) {
 */
 
 const app = express();
+const multer = require('multer')
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 app.set('view engine', 'ejs');
 app.use(express.static("public"));
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 // Inicia servidor e indica porta
 app.listen(3000, function() {
@@ -247,7 +251,7 @@ app.post('/criarEstudanteData', function (req, res) {
     if (result.length === 0) { // caso n exista no bd validations to insert
       if (!email.endsWith('@aluno.unb.br')) { // verificacao do email 
         res.render('criarestudante.ejs', { // email errado, mando aviso ao front
-          resultEmailValidation: { emailCorrect: false },
+          resultEmailValidation: { emailCorrect: false }
         });
       } else { // caso contrario, posso inserir no bd 
         let create_estudante =
@@ -275,82 +279,42 @@ app.post('/criarEstudanteData', function (req, res) {
 });
 
 app.get('/criarEstudante', function(req, res) {
-  res.render('criarestudante.ejs', { resultEmailValidation: { emailCorrect: true } });
+  res.render('criarestudante.ejs', { 
+    resultEmailValidation: { emailCorrect: true } 
+  });
 })
 
-/*
-app.post('/', function(req,res) {
-  let id = req.body.id;
-  let nome = req.body.nome;
+app.post('/loginEstudanteData', function (req, res) {
+  let matricula = req.body.matricula;
+  let senha = req.body.senha;
 
-  console.log(id, nome);
+  console.log(matricula, senha);
 
-  let create_sql = 'INSERT INTO departamento (Codigo_Departamento, Nome_Departamento) VALUES (?, ?)';
-  let values = [id,nome];
+  let check_estudante = 'SELECT * FROM estudante WHERE Matricula = ?';
 
-  con.query(create_sql, values, function(err,result) {
+  con.query(check_estudante, matricula, function (err, result) {
     if (err) throw err;
-    console.log("Departamento cadastrado");
-    res.redirect('/');
-  })
-})
-
-app.get("/", function(req,res) {
-  let read_sql = 'SELECT * FROM departamento;';
-
-  con.query(read_sql, function(err,results) {
-    if (err) throw err;
-    res.render("display.ejs", { test: results });
-  })
-})
-
-app.get("/update", function(req,res){
-  con.connect(function(error) {
-    if (error) console.log(error);
-
-    let unico_id_sql = 'SELECT * FROM departamento WHERE Codigo_Departamento =?;';
-
-    let id = req.query.id;
-
-    con.query(unico_id_sql, [id], function(error, result) {
-      if (error) console.log(error);
-
-      res.render('update', {test:result});
-    })
-  })
-})
-
-app.post("/updateData", function(req, res) {
-  let id = req.body.id;
-  let nome = req.body.nome;
-
-  console.log(nome, id);
-
-  let update_sql = 'UPDATE departamento SET Nome_Departamento=? WHERE Codigo_Departamento=?;';
-
-  con.query(update_sql, [nome, id], function(error, result) {
-    if (error) throw err;
-    res.redirect("/");
-  })
-})
-
-app.get("/delete", function(req, res) {
-  con.connect(function(err) {
-    if (err) console.log(err);
-
-    let delete_sql = 'DELETE FROM departamento WHERE Codigo_Departamento=?;';
-
-    let id = req.query.id;
-
-    con.query(delete_sql, [id], function(err, result) {
-      if (err) throw err;
-      res.redirect("/");
-    })
-  })
-})
-
-// Fornece index.html 
-app.get('/', function(req, res) {
-  res.render("index.html")
+    if (result.length === 0) { // caso n exista estudante com matricula no bd preciso direcionar a criacao do usuario
+      console.log('Estudante n existe, direcionando para sign-up...');
+      res.render('criarestudante.ejs', {
+        resultEmailValidation: { emailCorrect: true }
+      });
+    } else { // estudante com matricula existe em result
+      if (result[0].Senha !== senha) {
+        res.render('loginestudante.ejs', {
+          resultSenhaValidation: { senhaCorrect: false }
+        });        
+      } else { // existe e senha esta correta
+        res.render('feedestudante.ejs', {
+          resultLogin: { estudanteInfo: result[0] }
+        });
+      }
+    }
+  });
 });
-*/
+
+app.get('/loginEstudante', function(req, res) {
+  res.render('loginestudante.ejs', {
+    resultSenhaValidation: { senhaCorrect: true }
+  });
+});
