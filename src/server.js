@@ -6,7 +6,7 @@ const mysql = require('mysql2');
 const connectionConfig = {
   host: 'localhost',
   user: 'root', // usuario onde se deseja criar BD no MySQL
-  password: 'Leo250262', // senha do usuario
+  password: 'senhausuario', // senha do usuario
   database: 'leandrodb' // nome do banco de dados a ser criado ou estabelecida a conexao
 };
 
