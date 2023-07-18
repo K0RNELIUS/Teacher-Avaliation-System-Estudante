@@ -6,7 +6,7 @@ const mysql = require('mysql2');
 const connectionConfig = {
   host: 'localhost',
   user: 'root', // usuario onde se deseja criar BD no MySQL
-  password: 'senhausuario', // senha do usuario
+  password: 'Leo250262', // senha do usuario
   database: 'leandrodb' // nome do banco de dados a ser criado ou estabelecida a conexao
 };
 
@@ -234,19 +234,19 @@ app.get('/', function(req, res){
   res.render('index.ejs');
 })
 
-app.post('/criarEstudanteData', function (req, res) {
+app.post('/criarEstudanteData', upload.single('foto'), function (req, res) {
   let matricula = req.body.matricula;
   let email = req.body.email;
   let senha = req.body.senha;
   let nome = req.body.nome;
   let curso = req.body.curso;
-  let foto = req.body.foto;
+  let foto = req.file.buffer;
 
   console.log(matricula, email, senha, nome, curso, foto);
 
   let check_estudante = 'SELECT * FROM estudante WHERE Matricula = ?';
 
-  con.query(check_estudante, matricula, function (err, result) {
+  con.query(check_estudante, [matricula], function (err, result) {
     if (err) throw err;
     if (result.length === 0) { // caso n exista no bd validations to insert
       if (!email.endsWith('@aluno.unb.br')) { // verificacao do email 
@@ -268,12 +268,16 @@ app.post('/criarEstudanteData', function (req, res) {
         con.query(create_estudante, values, function (err, result) {
           if (err) throw err;
           console.log('Estudante criado');
-          res.render('loginestudante.ejs');
+          res.render('loginestudante.ejs', {
+            resultSenhaValidation: { senhaCorrect: true }
+          });     
         });
       }
     } else {
       console.log('Estudante ja existe, direcionando para login...')
-      res.render('loginestudante.ejs');
+      res.render('loginestudante.ejs', {
+        resultSenhaValidation: { senhaCorrect: true }
+      });     
     }
   });
 });
@@ -292,7 +296,7 @@ app.post('/loginEstudanteData', function (req, res) {
 
   let check_estudante = 'SELECT * FROM estudante WHERE Matricula = ?';
 
-  con.query(check_estudante, matricula, function (err, result) {
+  con.query(check_estudante, [matricula], function (err, result) {
     if (err) throw err;
     if (result.length === 0) { // caso n exista estudante com matricula no bd preciso direcionar a criacao do usuario
       console.log('Estudante n existe, direcionando para sign-up...');
@@ -349,7 +353,7 @@ app.post('/updateEstudanteData', function(req, res) {
 
     let check_estudante = 'SELECT * FROM estudante WHERE Matricula = ?';
 
-    con.query(check_estudante, matricula, function (err, result) {
+    con.query(check_estudante, [matricula], function (err, result) {
       if (err) throw err;
       res.render('feedestudante.ejs', {
         resultLogin: { estudanteInfo: result[0] }
